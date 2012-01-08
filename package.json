@@ -23,7 +23,7 @@
   },
   "devDependencies": {},
   "bin": {
-    "bin": "bin/npm-sync"
+    "npm-sync": "./bin/npm-sync"
   },
   "licenses": [{
     "type": "MIT",
