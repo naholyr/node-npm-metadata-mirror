@@ -24,5 +24,9 @@
   "devDependencies": {},
   "bin": {
     "bin": "bin/npm-sync"
-  }
+  },
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://github.com/naholyr/node-npm-metadata-mirror/blob/master/MIT-LICENSE"
+  }]
 }
