@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+// Example: npm-monitor --last_seq=63000
+// This is a huge WIP :o)
+
+var monitor = require('..').monitor,
+    options = require('optimist').argv;
+
+monitor(options)
+.on("delete", function (id) {
+  console.log('- %s', id);
+})
+.on("update", function (id, get_metadata) {
+  console.log('~ %s...', id);
+  get_metadata(function (err, metadata) {
+    if (err) console.error(err);
+    else {
+      if (!metadata._revs_info) {
+        console.log(metadata);
+      } else if (!metadata._revs_info[1] || metadata._revs_info[1].missing) {
+        console.log('+ %s@%s', id, metadata["dist-tags"].latest);
+      } else {
+        console.log('> %s@%s', id, metadata["dist-tags"].latest);
+      }
+    }
+  });
+})
+.on("rev", function (last_seq, nb_changes) {
+  console.log('@ %s', last_seq);
+})
+.on("poll", function (last_seq) {
+})
+.on("error", function (err) {
+  console.error(err);
+})
+.on("end", function () {
+  console.log('Terminated.');
+})
+.on("start", function () {
+  console.log('Started...');
+})
+.start();

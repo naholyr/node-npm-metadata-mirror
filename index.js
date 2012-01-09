@@ -1,13 +1,10 @@
 var mirror = require('./lib/mirror');
 
-module.exports = easy_mirror;
+module.exports = function mirror (options) { return mirror(fix_options(options)); };
 module.exports.store = mirror.store;
-module.exports.monitor = mirror.monitor;
+module.exports.monitor = function monitor (options) { return mirror.monitor(fix_options(options)); };
 
-/**
- * Simplified access to internal monitor, with couch host being already defined
- */
-function easy_mirror (options) {
+function fix_options (options) {
   options = options || {};
 
   // Default CouchDB information = official registry
@@ -18,6 +15,5 @@ function easy_mirror (options) {
   // Default store = Redis
   options.store = options.store || new (mirror.store.Redis)();
 
-  // Start mirroring
-  return mirror(options);
+  return options;
 }
