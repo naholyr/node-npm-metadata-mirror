@@ -6,7 +6,7 @@ Note that as for today, the metadata Redis DB is around 35M for only 1 rev / mod
 
 This module is intended to be part of a specific project, so it may not be as generic as it could, but feel free to use it for your own needs.
 
-*Warning*: API is still not stable. Wait for version `1.x` which should come as soon as I write unit tests, before considering intensively using this module. Public API should remain as documented here, but there is no guarantee (you can't imagine how it changed between 0.0.1 and 0.0.2 already :P).
+**Warning**: API is still not stable. Wait for version `1.x` which should come as soon as I write unit tests, before considering intensively using this module. Public API should remain as documented here, but there is no guarantee (you can't imagine how it changed between 0.0.2 and 0.0.3 already :P).
 
 ## Installation
 
@@ -40,7 +40,7 @@ Don't have Redis installed ? Oh dear, you should :-\ You can still store data in
 // Again and again.
 // You're really sure you want to do this?
 mirror({
-  "store": new (mirror.store.Memory)() // oh by the way, you can pass an existing Redis client to constructor
+  "store": new (mirror.store.Memory)()
 });
 ```
 
@@ -58,7 +58,8 @@ monitor.on("delete", function (id) {
 monitor.on("update", function (id, get_metadata) {
   // Module "id" added or updated.
   // Call "get_metadata([rev], function (err, metadata) { ... })" to access metadata.
-  // metadata contains "_revs_info", which can be useful to know if module is new or updated, or call "get_metadata" with a specified revision.
+  // metadata contains "_revs_info", which can be useful to know if module is new or updated,
+  // or call "get_metadata" with a specified revision.
 })
 monitor.on("rev", function (last_seq, nb_changes) {
   // Current DB revision fetched is "last_seq" (shouldn't be null)
