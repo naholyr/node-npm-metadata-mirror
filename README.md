@@ -6,6 +6,8 @@ Note that as for today, the metadata Redis DB is around 35M for only 1 rev / mod
 
 This module is intended to be part of a specific project, so it may not be as generic as it could, but feel free to use it for your own needs.
 
+*Warning*: API is still not stable. Wait for version `1.x` which should come as soon as I write unit tests, before considering intensively using this module. Public API should remain as documented here, but there is no guarantee (you can't imagine how it changed between 0.0.1 and 0.0.2 already :P).
+
 ## Installation
 
 Install this like any other node module.
@@ -93,6 +95,29 @@ mirror(options, function (err, monitor, last_seq) {
 })
 ```
 
+You may also want to access some other internals, I know it's comfortable so I expose them all:
+
+```javascript
+// Configure logging using log4js module
+// See https://github.com/csausdev/log4js-node
+mirror.log4js.addAppender(log4js.fileAppender('logs/mirror.log'), 'npm-metadata-mirror')
+mirror.log4js.addAppender(log4js.fileAppender('logs/monitor.log'), 'npm-metadata-monitor')
+
+// Starting a mirror returns some of his internals
+var mirror_internals = mirror(options)
+
+// Use the logger:
+mirror_internals.logger.info('Hello, I'll add info in mirror log file :)')
+// This is the same:
+mirror.log4js.getLogger('npm-metadata-mirror').info('...')
+
+// Access the internal monitor...
+mirror_internals.monitor.on("end", function () {
+  // ... who also exposes its own logger, of course
+  this.logger.fatal("Oh no! I should never end, I'm so cool :(")
+})
+```
+
 ### Command line
 
 ```
@@ -120,7 +145,6 @@ npm-metadata-mirror --store.engine=Redis --store.engine.options.port=12093
 * Add options to Redis engine: host, port, authentication...
 * Add tests.
 * Add doc (like all the options available, how to build a custom engine, etc...).
-* Use log4js.
 * Add monitor CLI.
 
 ## License: MIT

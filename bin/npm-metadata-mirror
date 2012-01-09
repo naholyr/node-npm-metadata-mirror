@@ -20,4 +20,4 @@ if (options.store) {
   options.store = new clazz(options.store.options);
 }
 
-require('..')(options);
+mirror(options);

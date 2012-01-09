@@ -2,6 +2,7 @@
 
 // Example: npm-monitor --last_seq=63000
 // This is a huge WIP :o)
+// It currently just notifies changes, the final objective would be to provide metadata, each line = a change
 
 var monitor = require('..').monitor,
     options = require('optimist').argv;

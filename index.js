@@ -1,8 +1,9 @@
 var mirror = require('./lib/mirror');
 
-module.exports = function mirror (options) { return mirror(fix_options(options)); };
-module.exports.store = mirror.store;
-module.exports.monitor = function monitor (options) { return mirror.monitor(fix_options(options)); };
+module.exports = function _mirror (options) { return mirror(fix_options(options)); };
+module.exports.store = mirror.store; // Expose to give access to the predefined store classes
+module.exports.monitor = function _monitor (options) { return mirror.monitor(fix_options(options)); };
+module.exports.log4js = require('log4js'); // Expose to ease logger configuration
 
 function fix_options (options) {
   options = options || {};
