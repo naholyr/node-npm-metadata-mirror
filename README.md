@@ -84,6 +84,15 @@ monitor.start() // Will trigger "start"
 // Properties: monitor.options = passed options. You can modify them "on the fly" if you need to.
 ```
 
+Or maybe you even want to access the internal monitor running during a mirrorring process? A bit greedy? OK:
+
+```javascript
+mirror(options, function (err, monitor, last_seq) {
+  // You can access the running monitor, and add your own processes attached to its events
+  monitor.stop() // or do dumb things
+})
+```
+
 ### Command line
 
 ```
