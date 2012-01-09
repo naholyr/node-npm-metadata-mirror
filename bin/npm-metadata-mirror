@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-// Example: npm-sync --store.engine=Memory --concurrency=5
+// Example: npm-metadata-mirror --store.engine=Memory --concurrency=5
 
-var options = require('optimist').argv,
-    monitor = require('..');
+var mirror = require('..'),
+    options = require('optimist').argv;
 
 if (options.store) {
   var clazz;
   if (options.store.module) {
     clazz = require(options.store.module);
   } else if (options.store.engine) {
-    clazz = monitor.store[options.store.engine];
+    clazz = mirror.store[options.store.engine];
   } else {
-    clazz = monitor.store.Redis;
+    clazz = mirror.store.Redis;
   }
   if (!clazz) {
     throw new Error('Invalid store: not found');
@@ -20,4 +20,4 @@ if (options.store) {
   options.store = new clazz(options.store.options);
 }
 
-require('../')(options);
+require('..')(options);

@@ -2,7 +2,7 @@
   "author": "Nicolas Chambrier <naholyr@gmail.com> (http://naholyr.fr)",
   "name": "npm-metadata-mirror",
   "description": "Monitor NPM changes and keep an up-to-date mirror of modules metadata (not the whole data, i.e. including attachments info, but not attachments body)",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "http://github.com/naholyr/node-npm-metadata-mirror"
@@ -23,7 +23,8 @@
   },
   "devDependencies": {},
   "bin": {
-    "npm-sync": "./bin/npm-sync"
+    "npm-metadata-mirror": "./bin/npm-metadata-mirror",
+    "npm-monitor": "./bin/npm-monitor"
   },
   "licenses": [{
     "type": "MIT",
