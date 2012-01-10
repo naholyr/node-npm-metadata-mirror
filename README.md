@@ -55,11 +55,12 @@ var monitor = mirror.monitor({
 monitor.on("delete", function (id) {
   // Module "id" deleted
 })
-monitor.on("change", function (id, get_metadata, rev) {
+monitor.on("update", function (id, metadata) {
   // Module "id" added or updated.
-  // Call "get_metadata([rev], function (err, metadata) { ... })" to access metadata.
-  // metadata contains "_revs_info", which can be useful to know if module is new or updated,
-  // or call "get_metadata" with a specified revision.
+  // "metadata" is the CouchDB metadata
+})
+monitor.on("new", function (id, metadata) {
+  // Same as the "update" event, but for modules published for the first time
 })
 monitor.on("rev", function (last_seq, nb_changes) {
   // Current DB revision fetched is "last_seq" (shouldn't be null)
@@ -146,6 +147,10 @@ npm-metadata-mirror --store.engine=Redis --store.engine.options.port=12093
 * Add options to Redis engine: host, port, authentication...
 * Add tests.
 * Add doc (like all the options available, how to build a custom engine, etc...).
+* Add auto-retry when retrieving metadata in monitor.
+* Skip the versions with no corresponding attachment: module updates create two revisions (1 = create metadata, 2 = attach file) and we send event twice.
+* Linked to previous point: Fix the "is new" criterion ("time" may not be accurate enough we'll ignore the very first step, and what about unpublished then re-published modules ?).
+* Do not provide brute metadata ?
 
 ## License: MIT
 
