@@ -55,7 +55,7 @@ var monitor = mirror.monitor({
 monitor.on("delete", function (id) {
   // Module "id" deleted
 })
-monitor.on("update", function (id, get_metadata) {
+monitor.on("change", function (id, get_metadata, rev) {
   // Module "id" added or updated.
   // Call "get_metadata([rev], function (err, metadata) { ... })" to access metadata.
   // metadata contains "_revs_info", which can be useful to know if module is new or updated,
@@ -108,7 +108,7 @@ mirror.log4js.addAppender(log4js.fileAppender('logs/monitor.log'), 'npm-metadata
 var mirror_internals = mirror(options)
 
 // Use the logger:
-mirror_internals.logger.info('Hello, I'll add info in mirror log file :)')
+mirror_internals.logger.info('Hello, I\'ll add info in mirror log file :)')
 // This is the same:
 mirror.log4js.getLogger('npm-metadata-mirror').info('...')
 
@@ -146,7 +146,6 @@ npm-metadata-mirror --store.engine=Redis --store.engine.options.port=12093
 * Add options to Redis engine: host, port, authentication...
 * Add tests.
 * Add doc (like all the options available, how to build a custom engine, etc...).
-* Add monitor CLI.
 
 ## License: MIT
 
