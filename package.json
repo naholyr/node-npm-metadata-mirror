@@ -10,7 +10,11 @@
   "bugs": {
     "url": "http://github.com/naholyr/node-npm-metadata-mirror/issues"
   },
-  "keywords": ["npm", "mirror", "metadata"],
+  "keywords": [
+    "npm",
+    "mirror",
+    "metadata"
+  ],
   "main": "index",
   "engines": {
     "node": "~0.6.5"
@@ -19,15 +23,22 @@
     "log4js": "~0.4.1",
     "optimist": "~0.3.1",
     "async": "~0.1.15",
-    "redis": "~0.7.1"
+    "redis": "~0.7.1",
+    "hiredis": "~0.1.13",
+    "mongodb": "~0.9.7-3-5"
   },
   "devDependencies": {},
   "bin": {
     "npm-metadata-mirror": "./bin/npm-metadata-mirror",
     "npm-monitor": "./bin/npm-monitor"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "http://github.com/naholyr/node-npm-metadata-mirror/blob/master/MIT-LICENSE"
-  }]
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/naholyr/node-npm-metadata-mirror/blob/master/MIT-LICENSE"
+    }
+  ],
+  "scripts": {
+    "postinstall": "npm install mongodb --mongodb:native"
+  }
 }
