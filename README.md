@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/naholyr/node-npm-metadata-mirror.png)](http://travis-ci.org/naholyr/node-npm-metadata-mirror)
+
 # npm metadata mirror
 
 Monitor NPM changes and keep an up-to-date mirror of modules metadata (not the whole data, i.e. including attachments info, but not attachments body).
@@ -144,13 +146,12 @@ npm-metadata-mirror --store.engine=Redis --store.engine.options.port=12093
 
 ## TODO
 
-* Add options to Redis engine: host, port, authentication...
-* Add tests.
+* Add options to Redis engine: host, port, authentication.
+* Add options to Mongo engine: authentication.
 * Add doc (like all the options available, how to build a custom engine, etc...).
 * Add auto-retry when retrieving metadata in monitor.
+* Unit test the monitor and the mirror public API (should I mock the target CouchDB ?…).
 * Skip the versions with no corresponding attachment: module updates create two revisions (1 = create metadata, 2 = attach file) and we send event twice.
-* Linked to previous point: Fix the "is new" criterion ("time" may not be accurate enough we'll ignore the very first step, and what about unpublished then re-published modules ?).
-* Do not provide brute metadata ?
 
 ## License: MIT
 
