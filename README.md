@@ -128,14 +128,7 @@ mirror_internals.monitor.on("end", function () {
 npm-metadata-mirror [options]
 ```
 
-Options are all the available options passed to `mirror` function. Except for the `store` option, as it's the initialization of an object:
-
-* `--couch.host` host name of the CouchDB instance, default is "isaacs.iriscouch.com".
-* `--couch.db` db name of the CouchDB instance, default is "registry".
-* `--couch.port` host name of the CouchDB instance, default is 80.
-* `--store.engine` the standard engine used, can be "Memory" or "Redis", default is "Redis".
-* `--store.module` the engine class will be loaded from this module, instead of default `mirror.store`.
-* `--store.options` the options passed to the engine constructor.
+Options are all the available options passed to `mirror` function. See the next section "Options" for a comprehensive list of all available options.
 
 Example:
 
@@ -144,11 +137,139 @@ Example:
 npm-metadata-mirror --store.engine=Redis --store.engine.options.port=12093
 ```
 
+## Options
+
+Supported options:
+
+```javascript
+{
+  // Common options (monitor & mirror)
+  "delay":    0,      // Delay (ms) before retrying in case of error
+  "last_seq": null,   // CouchDB revision since start of the mirroring
+
+  // Mirror options
+  "couch": // CouchDB server information
+  {
+    "host":   "isaacs.iriscouch.com",
+    "db":     "registry",
+    "port":   80
+  },
+  "store": // Store engine parameters
+  // Can be a direct instance of Store, or a hash
+  {
+    "engine": "MongoDB",          // Name of the class in the default stores
+    "module": "./path/to/module", // Path to module in case of a custom engine
+    // Note that "engine" and "module" are exclusive
+    "options": {},                // Options for the engine constructor
+  }
+```
+
+### Redis
+
+Supported options:
+
+```javascript
+{
+  "client": null, // Instance of Redis client (use module "redis")
+  // Following options are ignored if you passed your own client instance
+  "host": "127.0.0.1",
+  "port": 6379,
+  "db": 0
+}
+```
+
+Authentication is not supported yet. If you need it, feel free to contribute, or simply initialize your own Redis client.
+
+### MongoDB
+
+Supported options:
+
+```javascript
+{
+  "client": null, // Instance of Db client (use module "mongodb")
+  // Following options are ignored if you passed you own client instance
+  "host": "127.0.0.1",
+  "port": 27017,
+  "db":   "test"
+}
+```
+
+Like Redis, authentication is not supported yet. Feel free to contribute or use your own client instance.
+
+## Storage engines
+
+### Available engines
+
+* In memory: `mirror.store.Memory`. This engine is not advised as it won't persist your data, but it requires no dependency.
+* Redis: `mirror.store.Memory`. This engine will be super fast, but the metadata is stored as a JSON string, hard to query.
+* Mongo DB: `mirror.store.MongoDB`. As Mongo DB directly supports JSON, you'll be able to query your metadata mirror more easily.
+
+### Write your own
+
+Write a store engine as a module, which should expose a class extending base `Store` class provided in `mirror.store`. Here is a bootstrap:
+
+```javascript
+var BaseStore = require('npm-metadata-mirror').store.Store,
+    util = require('util');
+
+// Your store engine
+function MyStore (options) {
+  // extend BaseStore: your engine is an event emitter and implements the "ready(cb)" method
+  BaseStore.call(this, options);
+
+  // Initialize your store, then emit the "ready" event to notify you're ready to work
+  this.emit("ready");
+}
+
+// Check if a module exists
+// has( "module name", [ function (error, exists) ] )
+MyStore.prototype.has = function (key, cb);
+
+// Retrieve module metadata
+// get ( "module name", [ function (error, metadata) ] )
+MyStore.prototype.get = function (key, cb);
+
+// Insert or update module metadata
+// put ( "module name", metadata, [ function (error, inserted, metadata) ] )
+MyStore.prototype.put = function (key, data, cb);
+
+// Remove a module
+// remove ( "module name", [ function (error, found) ] )
+MyStore.prototype.remove = function (key, cb);
+
+// Update or retrieve last_seq so that next calls to mirror will know where to start
+// lastSeq ( [ value ], [ function (error, value) ])
+MyStore.prototype.lastSeq = function (value, cb);
+
+  function getMany (emit, done, deleted);
+          emit(null, id, modules[id]);
+    if (done) done();
+  }
+
+// Retrieve all active modules: first callback is called once for each module, second one is called at end
+// getAll ( function (error, "module name", metadata), function (error) )
+MyStore.prototype.getAll = function (emit, done);
+
+// Retrieve all deleted modules: same callbacks as getAll()
+// getAll ( function (error, "module name", metadata), function (error) )
+MyStore.prototype.getGraveyard = function (emit, done);
+
+// Close your engine connection
+// close ( function () )
+MyStore.prototype.close = function (cb);
+
+// Extend BaseStore
+util.inherits(MemoryStore, BaseStore);
+
+// Expose your class
+module.exports = MyStore;
+```
+
+See [https://github.com/naholyr/node-npm-metadata-mirror/blob/master/lib/store/memory.js](`lib/store/memory.js`) for a simple example.
+
 ## TODO
 
-* Add options to Redis engine: host, port, authentication.
-* Add options to Mongo engine: authentication.
-* Add doc (like all the options available, how to build a custom engine, etc...).
+* Support authentication in Redis and MongoDB engines
 * Add auto-retry when retrieving metadata in monitor.
 * Unit test the monitor and the mirror public API (should I mock the target CouchDB ?…).
 * Skip the versions with no corresponding attachment: module updates create two revisions (1 = create metadata, 2 = attach file) and we send event twice.

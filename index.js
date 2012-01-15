@@ -32,6 +32,7 @@ function fix_options (options) {
   options.couch = options.couch || {};
   options.couch.host = options.couch.host || 'isaacs.iriscouch.com';
   options.couch.db = options.couch.db || 'registry';
+  options.couch.port = options.couch.port || 80;
 
   // Default store = Redis
   options.store = options.store || new (mirror.store.Redis)();
