@@ -2,22 +2,22 @@
 
 // Example: npm-metadata-mirror --store.engine=Memory --concurrency=5
 
-var mirror = require('..'),
-    options = require('optimist').argv;
-
-if (options.store) {
-  var clazz;
-  if (options.store.module) {
-    clazz = require(options.store.module);
-  } else if (options.store.engine) {
-    clazz = mirror.store[options.store.engine];
-  } else {
-    clazz = mirror.store.Redis;
-  }
-  if (!clazz) {
-    throw new Error('Invalid store: not found');
-  }
-  options.store = new clazz(options.store.options);
-}
-
-mirror(options);
+require('..')(require('optimist')
+  .usage('Maintain a mirror of NPM modules metadata.\nUsage: $0')
+  .check(function (o) {
+    if (!o.store || (!o.store.engine && !o.store.module)) {
+      throw new Error('You must specify store.engine or store.module');
+    }
+  })
+  .describe('delay', 'Delay (ms) before retrying in case of error')
+  .describe('last_seq', 'CouchDB revision since start of the mirroring')
+  .describe('concurrency', 'Max parallel queries to CouchDB host')
+  .describe('couch.host', 'CouchDB host name')
+  .describe('couch.db', 'CouchDB database name')
+  .describe('couch.port', 'CouchDB server port')
+  .describe('store.engine', 'Mongo Name of the class in the default stores')
+  .describe('store.module', 'Path to module in case of a custom engine')
+  .describe('store.options.host', 'Storage server name')
+  .describe('store.options.db', 'Storage server database')
+  .describe('store.options.port', 'Storage server port')
+  .argv);

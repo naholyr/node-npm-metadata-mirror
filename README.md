@@ -146,6 +146,7 @@ Supported options:
   // Common options (monitor & mirror)
   "delay":    0,      // Delay (ms) before retrying in case of error
   "last_seq": null,   // CouchDB revision since start of the mirroring
+  "concurrency": 10,  // Max parallel queries to CouchDB host
 
   // Mirror options
   "couch": // CouchDB server information
@@ -160,8 +161,9 @@ Supported options:
     "engine": "MongoDB",          // Name of the class in the default stores
     "module": "./path/to/module", // Path to module in case of a custom engine
     // Note that "engine" and "module" are exclusive
-    "options": {},                // Options for the engine constructor
+    "options": {}                 // Options for the engine constructor
   }
+}
 ```
 
 ### Redis
