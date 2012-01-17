@@ -2,22 +2,30 @@
 
 // Example: npm-metadata-mirror --store.engine=Memory --concurrency=5
 
-require('..')(require('optimist')
-  .usage('Maintain a mirror of NPM modules metadata.\nUsage: $0')
-  .check(function (o) {
-    if (!o.store || (!o.store.engine && !o.store.module)) {
-      throw new Error('You must specify store.engine or store.module');
-    }
-  })
-  .describe('delay', 'Delay (ms) before retrying in case of error')
-  .describe('last_seq', 'CouchDB revision since start of the mirroring')
-  .describe('concurrency', 'Max parallel queries to CouchDB host')
-  .describe('couch.host', 'CouchDB host name')
-  .describe('couch.db', 'CouchDB database name')
-  .describe('couch.port', 'CouchDB server port')
-  .describe('store.engine', 'Mongo Name of the class in the default stores')
-  .describe('store.module', 'Path to module in case of a custom engine')
-  .describe('store.options.host', 'Storage server name')
-  .describe('store.options.db', 'Storage server database')
-  .describe('store.options.port', 'Storage server port')
-  .argv);
+var mirror = require('..'),
+    getopts = require('optimist')
+      .usage('Maintain a mirror of NPM modules metadata.\nUsage: $0')
+      .check(function (o) {
+        if (!o.store || (!o.store.engine && !o.store.module)) {
+          throw new Error('You must specify store.engine or store.module');
+        }
+      })
+      .describe('delay', 'Delay (ms) before retrying in case of error')
+      .describe('last_seq', 'CouchDB revision since start of the mirroring')
+      .describe('concurrency', 'Max parallel queries to CouchDB host')
+      .describe('couch.host', 'CouchDB host name')
+      .describe('couch.db', 'CouchDB database name')
+      .describe('couch.port', 'CouchDB server port')
+      .describe('store.engine', 'Mongo Name of the class in the default stores')
+      .describe('store.module', 'Path to module in case of a custom engine')
+      .describe('store.options.host', 'Storage server name')
+      .describe('store.options.db', 'Storage server database')
+      .describe('store.options.port', 'Storage server port');
+
+try {
+  mirror(getopts.argv);
+} catch (e) {
+  getopts.showHelp(function (usage) {
+    console.error(usage + '\n[' + (e.message || e.toString()) + ']');
+  });
+}
