@@ -13,6 +13,7 @@ var mirror = require('..'),
       .describe('delay', 'Delay (ms) before retrying in case of error')
       .describe('last_seq', 'CouchDB revision since start of the mirroring')
       .describe('concurrency', 'Max parallel queries to CouchDB host')
+      .describe('mode', 'Request mode: continuous or longpoll (default = continuous)')
       .describe('couch.host', 'CouchDB host name')
       .describe('couch.db', 'CouchDB database name')
       .describe('couch.port', 'CouchDB server port')
