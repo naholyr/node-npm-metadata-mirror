@@ -147,6 +147,7 @@ Supported options:
   "delay":    0,      // Delay (ms) before retrying in case of error
   "last_seq": null,   // CouchDB revision since start of the mirroring
   "concurrency": 10,  // Max parallel queries to CouchDB host
+  "mode": "longpoll", // Request mode: continuous or longpoll
 
   // Mirror options
   "couch": // CouchDB server information
@@ -271,10 +272,10 @@ See [https://github.com/naholyr/node-npm-metadata-mirror/blob/master/lib/store/m
 
 ## TODO
 
-* Support authentication in Redis and MongoDB engines
+* Retrieve all versions of a module at first load.
+* Support authentication in Redis and MongoDB engines.
 * Add auto-retry when retrieving metadata in monitor.
 * Unit test the monitor and the mirror public API (should I mock the target CouchDB ?…).
-* Skip the versions with no corresponding attachment: module updates create two revisions (1 = create metadata, 2 = attach file) and we send event twice.
 
 ## License: MIT
 
